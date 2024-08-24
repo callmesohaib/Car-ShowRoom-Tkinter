@@ -248,6 +248,32 @@ class CarGUI:
             pady=10,
             sticky="ew",
         )
+        # Input Label
+        self.input = tk.Label(
+            self.newWindow,
+            text="Enter Hours",
+            font=("Arial", 12),
+            bg="black",
+            fg="white",
+        )
+        self.input.grid(row=9, column=0, padx=10, pady=5, sticky="w")
+
+        # Text Box
+        self.textBox = tk.Text(
+            self.newWindow,
+            height=1,
+            font=("Arial", 18),
+            bg="white",
+            width=20,
+        )
+        self.textBox.grid(
+            row=9,
+            column=1,
+            columnspan=4,
+            padx=10,
+            pady=10,
+            sticky="ew",
+        )
 
         # Buttons
         self.Btn1 = tk.Button(
@@ -258,7 +284,7 @@ class CarGUI:
             fg="white",
             command=self.rent_car_confirm,
         )
-        self.Btn1.grid(row=9, column=0, padx=10, pady=10, sticky="ew")
+        self.Btn1.grid(row=10, column=0, padx=10, pady=10, sticky="ew")
 
         self.Btn2 = tk.Button(
             self.newWindow,
@@ -268,7 +294,7 @@ class CarGUI:
             bg="red",
             command=self.mainWindow,
         )
-        self.Btn2.grid(row=9, column=1, padx=10, pady=10, sticky="ew")
+        self.Btn2.grid(row=10, column=1, padx=10, pady=10, sticky="ew")
 
         self.newWindow.protocol("WM_DELETE_WINDOW", self.onclosing)
 
