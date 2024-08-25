@@ -111,10 +111,11 @@ class CarGUI:
             self.header_label = tk.Label(
                 window,
                 text=head,
-                font=("Arial", 16, "bold"),
-                bg="lightgray",
+                font=("Century Gothic", 16, "bold"),
+                bg="red",
                 padx=30,
                 pady=5,
+                fg="cyan",
             )
             self.header_label.grid(row=1, column=col, sticky="nsew")
 
@@ -133,7 +134,7 @@ class CarGUI:
             tk.Label(window, text=f"${price}", font=("Arial", 14)).grid(
                 row=i + 2, column=1, pady=5, padx=30, sticky="nsew"
             )
-            tk.Label(window, text=f"${rent}", font=("Arial", 14)).grid(
+            tk.Label(window, text=f"${rent}/h", font=("Arial", 14)).grid(
                 row=i + 2, column=2, pady=5, padx=30, sticky="nsew"
             )
             tk.Label(window, text=available, font=("Arial", 14)).grid(
@@ -259,14 +260,14 @@ class CarGUI:
         self.input.grid(row=9, column=0, padx=10, pady=5, sticky="w")
 
         # Text Box
-        self.textBox = tk.Text(
+        self.hourBox = tk.Text(
             self.newWindow,
             height=1,
             font=("Arial", 18),
             bg="white",
             width=20,
         )
-        self.textBox.grid(
+        self.hourBox.grid(
             row=9,
             column=1,
             columnspan=4,
@@ -310,13 +311,16 @@ class CarGUI:
     def buy_car_confirm(self):
         car_names = self.car.displayNames()
         availability = self.car.displayAvailability()
+        sale_prices = self.car.displaySalePrices()
         car_name = self.textBox.get("1.0", tk.END).strip()
 
         try:
             index = car_names.index(car_name)
+            sale_cost = sale_prices[index]
             if availability[index] == "Yes":
                 messagebox.showinfo(
-                    "Success", f"Car '{car_name}' purchased successfully.\n"
+                    "Success",
+                    f"Total cost: ${sale_cost}.\nCar '{car_name}' purchased successfully.\n",
                 )
                 availability[index] = "No"
                 self.car.updateAvailability(index, "No")
@@ -328,6 +332,8 @@ class CarGUI:
                 messagebox.showerror(
                     "Error", f"Car '{car_name}' is not available for purchase."
                 )
+                self.textBox.delete("1.0", tk.END)
+
         except ValueError:
             messagebox.showerror(
                 "Error", "Car name not found. Please enter a valid car name."
@@ -337,13 +343,18 @@ class CarGUI:
     def rent_car_confirm(self):
         car_names = self.car.displayNames()
         availability = self.car.displayAvailability()
+        rent_prices = self.car.displayRentPrices()
         car_name = self.textBox.get("1.0", tk.END).strip()
+        rent_hours = self.hourBox.get("1.0", tk.END).strip()
+        rent_hours = int(rent_hours)
 
         try:
             index = car_names.index(car_name)
+            rent_cost = rent_hours * int(rent_prices[index])
             if availability[index] == "Yes":
                 messagebox.showinfo(
-                    "Success", f"Car '{car_name}' rented successfully.\n"
+                    "Success",
+                    f"Total cost: {rent_cost}.\nCar '{car_name}' rented successfully.\n",
                 )
                 availability[index] = "No"
                 self.car.updateAvailability(index, "No")
@@ -355,6 +366,7 @@ class CarGUI:
                 messagebox.showerror(
                     "Error", f"Car '{car_name}' is not available for rent."
                 )
+                self.textBox.delete("1.0", tk.END)
         except ValueError:
             messagebox.showerror(
                 "Error", "Car name not found. Please enter a valid car name."
