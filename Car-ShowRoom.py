@@ -59,7 +59,7 @@ class CarGUI:
         self.display_table(self.root)
 
         # Buttons
-        self.btnFrame = tk.Frame(self.root,bg="skyblue")
+        self.btnFrame = tk.Frame(self.root, bg="skyblue")
         self.btnFrame.grid(
             row=len(self.car.displayNames()) + 2,
             column=0,
@@ -137,18 +137,24 @@ class CarGUI:
         for i, (name, price, rent, available) in enumerate(
             zip(self.car_names, self.sale_prices, self.rent_prices, self.availability)
         ):
-            tk.Label(window, text=name, font=("Arial", 14),fg="white",bg="black").grid(
-                row=i + 2, column=0, pady=5, padx=30, sticky="nsew",
+            tk.Label(
+                window, text=name, font=("Arial", 14), fg="white", bg="black"
+            ).grid(
+                row=i + 2,
+                column=0,
+                pady=5,
+                padx=30,
+                sticky="nsew",
             )
-            tk.Label(window, text=f"${price}", font=("Arial", 14),fg="white",bg="black").grid(
-                row=i + 2, column=1, pady=5, padx=30, sticky="nsew"
-            )
-            tk.Label(window, text=f"${rent}/h", font=("Arial", 14),fg="white",bg="black").grid(
-                row=i + 2, column=2, pady=5, padx=30, sticky="nsew"
-            )
-            tk.Label(window, text=available, font=("Arial", 14),fg="white",bg="black").grid(
-                row=i + 2, column=3, pady=5, padx=30, sticky="nsew"
-            )
+            tk.Label(
+                window, text=f"${price}", font=("Arial", 14), fg="white", bg="black"
+            ).grid(row=i + 2, column=1, pady=5, padx=30, sticky="nsew")
+            tk.Label(
+                window, text=f"${rent}/h", font=("Arial", 14), fg="white", bg="black"
+            ).grid(row=i + 2, column=2, pady=5, padx=30, sticky="nsew")
+            tk.Label(
+                window, text=available, font=("Arial", 14), fg="white", bg="black"
+            ).grid(row=i + 2, column=3, pady=5, padx=30, sticky="nsew")
 
     def buy_car(self):
         self.root.withdraw()
@@ -328,6 +334,10 @@ class CarGUI:
     def buy_car_confirm(self):
         car_names = self.car.displayNames()
         car_name = self.textBox.get("1.0", tk.END).strip()
+        if not car_name:
+            messagebox.showwarning("Warning", "Please enter a car name.")
+            self.textBox.delete("1.0", tk.END)
+            return
 
         try:
             index = car_names.index(car_name)
@@ -368,6 +378,11 @@ class CarGUI:
         car_names = self.car.displayNames()
         car_name = self.textBox.get("1.0", tk.END).strip()
         rent_hours = self.hourBox.get("1.0", tk.END).strip()
+        if not car_name or not rent_hours:
+            messagebox.showwarning("Warning", "Please enter a car name and hours.")
+            self.textBox.delete("1.0", tk.END)
+            self.hourBox.delete("1.0", tk.END)
+            return
         rent_hours = int(rent_hours)
 
         try:
@@ -419,7 +434,7 @@ class CarGUI:
         """Update the main window with the latest car data."""
         self.car = Car(read_car_data_from_file(self.filename))
         self.display_table(self.root)
-        self.btnFrame = tk.Frame(self.root,bg="skyblue")
+        self.btnFrame = tk.Frame(self.root, bg="skyblue")
         self.btnFrame.grid(
             row=len(self.car.displayNames()) + 2,
             column=0,
