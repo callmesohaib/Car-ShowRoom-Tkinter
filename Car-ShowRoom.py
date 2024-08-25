@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox
+from tkinter import font
 
 
 class Car:
@@ -40,10 +41,17 @@ class CarGUI:
         self.root = tk.Tk()
         self.root.title("Car ShowRoom")
         self.root.geometry("650x500")
-
+        self.root.configure(bg="skyblue")
+        self.underline_font = font.Font(
+            self.root, underline=True, size=24, weight="bold"
+        )
         # Heading
         self.heading = tk.Label(
-            self.root, text="HAQ Motors", font=("Bold", 20), bg="black", fg="white"
+            self.root,
+            text="Highway Brothers",
+            font=self.underline_font,
+            bg="gray",
+            fg="black",
         )
         self.heading.grid(row=0, column=0, columnspan=4, pady=20, sticky="nsew")
 
@@ -51,12 +59,13 @@ class CarGUI:
         self.display_table(self.root)
 
         # Buttons
-        self.btnFrame = tk.Frame(self.root)
+        self.btnFrame = tk.Frame(self.root,bg="skyblue")
         self.btnFrame.grid(
             row=len(self.car.displayNames()) + 2,
             column=0,
             columnspan=4,
             pady=10,
+            padx=140,
             sticky="ew",
         )
 
@@ -64,7 +73,7 @@ class CarGUI:
             self.btnFrame,
             text="Buy Car",
             font=("Arial", 16),
-            bg="green",
+            bg="black",
             fg="white",
             command=self.buy_car,
         )
@@ -75,7 +84,7 @@ class CarGUI:
             text="Rent Car",
             font=("Arial", 16),
             fg="black",
-            bg="yellow",
+            bg="white",
             command=self.rent_car,
         )
         self.rentBtn.grid(row=0, column=1, padx=10, pady=10, sticky="ew")
@@ -84,7 +93,7 @@ class CarGUI:
             self.btnFrame,
             text="Exit",
             font=("Arial", 16),
-            fg="white",
+            fg="black",
             bg="red",
             width=10,
             command=self.main_close,
@@ -112,32 +121,32 @@ class CarGUI:
                 window,
                 text=head,
                 font=("Century Gothic", 16, "bold"),
-                bg="red",
+                bg="lightgray",
                 padx=30,
                 pady=5,
-                fg="cyan",
+                fg="black",
             )
             self.header_label.grid(row=1, column=col, sticky="nsew")
 
         # Data Labels
-        car_names = self.car.displayNames()
-        sale_prices = self.car.displaySalePrices()
-        rent_prices = self.car.displayRentPrices()
-        availability = self.car.displayAvailability()
+        self.car_names = self.car.displayNames()
+        self.sale_prices = self.car.displaySalePrices()
+        self.rent_prices = self.car.displayRentPrices()
+        self.availability = self.car.displayAvailability()
 
         for i, (name, price, rent, available) in enumerate(
-            zip(car_names, sale_prices, rent_prices, availability)
+            zip(self.car_names, self.sale_prices, self.rent_prices, self.availability)
         ):
-            tk.Label(window, text=name, font=("Arial", 14)).grid(
-                row=i + 2, column=0, pady=5, padx=30, sticky="nsew"
+            tk.Label(window, text=name, font=("Arial", 14),fg="white",bg="black").grid(
+                row=i + 2, column=0, pady=5, padx=30, sticky="nsew",
             )
-            tk.Label(window, text=f"${price}", font=("Arial", 14)).grid(
+            tk.Label(window, text=f"${price}", font=("Arial", 14),fg="white",bg="black").grid(
                 row=i + 2, column=1, pady=5, padx=30, sticky="nsew"
             )
-            tk.Label(window, text=f"${rent}/h", font=("Arial", 14)).grid(
+            tk.Label(window, text=f"${rent}/h", font=("Arial", 14),fg="white",bg="black").grid(
                 row=i + 2, column=2, pady=5, padx=30, sticky="nsew"
             )
-            tk.Label(window, text=available, font=("Arial", 14)).grid(
+            tk.Label(window, text=available, font=("Arial", 14),fg="white",bg="black").grid(
                 row=i + 2, column=3, pady=5, padx=30, sticky="nsew"
             )
 
@@ -150,7 +159,11 @@ class CarGUI:
 
         # Heading Label
         self.newLabel = tk.Label(
-            self.newWindow, text="Buy Page", font=("Arial", 14), bg="black", fg="white"
+            self.newWindow,
+            text="Buy Page",
+            font=self.underline_font,
+            bg="black",
+            fg="white",
         )
         self.newLabel.grid(row=0, column=0, columnspan=4, pady=20, sticky="nsew")
 
@@ -189,7 +202,7 @@ class CarGUI:
             self.newWindow,
             text="Buy",
             font=("Arial", 16),
-            bg="green",
+            bg="black",
             fg="white",
             command=self.buy_car_confirm,
         )
@@ -216,7 +229,11 @@ class CarGUI:
 
         # Heading Label
         self.newLabel = tk.Label(
-            self.newWindow, text="Rent Page", font=("Arial", 14), bg="black", fg="white"
+            self.newWindow,
+            text="Rent Page",
+            font=self.underline_font,
+            bg="black",
+            fg="white",
         )
         self.newLabel.grid(row=0, column=0, columnspan=4, pady=20, sticky="nsew")
 
@@ -281,7 +298,7 @@ class CarGUI:
             self.newWindow,
             text="Rent",
             font=("Arial", 16),
-            bg="green",
+            bg="Black",
             fg="white",
             command=self.rent_car_confirm,
         )
@@ -310,25 +327,32 @@ class CarGUI:
 
     def buy_car_confirm(self):
         car_names = self.car.displayNames()
-        availability = self.car.displayAvailability()
-        sale_prices = self.car.displaySalePrices()
         car_name = self.textBox.get("1.0", tk.END).strip()
 
         try:
             index = car_names.index(car_name)
-            sale_cost = sale_prices[index]
-            if availability[index] == "Yes":
-                messagebox.showinfo(
-                    "Success",
-                    f"Total cost: ${sale_cost}.\nCar '{car_name}' purchased successfully.\n",
+            sale_cost = self.sale_prices[index]
+            if self.availability[index] == "Yes":
+                buyBox_return = messagebox.askokcancel(
+                    "Dealing",
+                    f"Total cost: ${sale_cost}.",
                 )
-                availability[index] = "No"
-                self.car.updateAvailability(index, "No")
-                self.save_car_data()
-                self.newWindow.destroy()
-                self.root.deiconify()
-                self.update_main_window()
+                if not buyBox_return:
+                    self.newWindow.destroy()
+                    self.root.deiconify()
+                else:
+                    messagebox.showinfo(
+                        "Success",
+                        f"Car '{car_name}' purchased successfully.\n",
+                    )
+                    self.availability[index] = "No"
+                    self.car.updateAvailability(index, "No")
+                    self.save_car_data()
+                    self.newWindow.destroy()
+                    self.root.deiconify()
+                    self.update_main_window()
             else:
+
                 messagebox.showerror(
                     "Error", f"Car '{car_name}' is not available for purchase."
                 )
@@ -342,26 +366,32 @@ class CarGUI:
 
     def rent_car_confirm(self):
         car_names = self.car.displayNames()
-        availability = self.car.displayAvailability()
-        rent_prices = self.car.displayRentPrices()
         car_name = self.textBox.get("1.0", tk.END).strip()
         rent_hours = self.hourBox.get("1.0", tk.END).strip()
         rent_hours = int(rent_hours)
 
         try:
             index = car_names.index(car_name)
-            rent_cost = rent_hours * int(rent_prices[index])
-            if availability[index] == "Yes":
-                messagebox.showinfo(
-                    "Success",
-                    f"Total cost: {rent_cost}.\nCar '{car_name}' rented successfully.\n",
+            rent_cost = rent_hours * int(self.rent_prices[index])
+            if self.availability[index] == "Yes":
+                rentBox_return = messagebox.askokcancel(
+                    "Dealing",
+                    f"Total cost: ${rent_cost}.",
                 )
-                availability[index] = "No"
-                self.car.updateAvailability(index, "No")
-                self.save_car_data()
-                self.newWindow.destroy()
-                self.root.deiconify()
-                self.update_main_window()
+                if not rentBox_return:
+                    self.newWindow.destroy()
+                    self.root.deiconify()
+                else:
+                    messagebox.showinfo(
+                        "Success",
+                        f"Car '{car_name}' rented successfully.\n",
+                    )
+                    self.availability[index] = "No"
+                    self.car.updateAvailability(index, "No")
+                    self.save_car_data()
+                    self.newWindow.destroy()
+                    self.root.deiconify()
+                    self.update_main_window()
             else:
                 messagebox.showerror(
                     "Error", f"Car '{car_name}' is not available for rent."
@@ -389,12 +419,13 @@ class CarGUI:
         """Update the main window with the latest car data."""
         self.car = Car(read_car_data_from_file(self.filename))
         self.display_table(self.root)
-        self.btnFrame = tk.Frame(self.root)
+        self.btnFrame = tk.Frame(self.root,bg="skyblue")
         self.btnFrame.grid(
             row=len(self.car.displayNames()) + 2,
             column=0,
             columnspan=4,
             pady=10,
+            padx=140,
             sticky="ew",
         )
 
@@ -402,7 +433,7 @@ class CarGUI:
             self.btnFrame,
             text="Buy Car",
             font=("Arial", 16),
-            bg="green",
+            bg="black",
             fg="white",
             command=self.buy_car,
         )
@@ -413,15 +444,16 @@ class CarGUI:
             text="Rent Car",
             font=("Arial", 16),
             fg="black",
-            bg="yellow",
+            bg="white",
             command=self.rent_car,
         )
         self.rentBtn.grid(row=0, column=1, padx=10, pady=10, sticky="ew")
+
         self.exitBtn = tk.Button(
             self.btnFrame,
             text="Exit",
             font=("Arial", 16),
-            fg="white",
+            fg="black",
             bg="red",
             width=10,
             command=self.main_close,
