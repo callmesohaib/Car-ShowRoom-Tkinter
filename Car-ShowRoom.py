@@ -40,7 +40,7 @@ class CarGUI:
 
         self.root = tk.Tk()
         self.root.title("Car ShowRoom")
-        self.root.geometry("650x500")
+        self.root.geometry("670x500")
         self.root.configure(bg="skyblue")
         self.underline_font = font.Font(
             self.root, underline=True, size=24, weight="bold"
@@ -59,6 +59,15 @@ class CarGUI:
         self.display_table(self.root)
 
         # Buttons
+        self.display_btn(self.root)
+
+        self.root.mainloop()
+
+    def main_close(self):
+        """Close the main window."""
+        self.root.destroy()
+
+    def display_btn(self, window):
         self.btnFrame = tk.Frame(self.root, bg="skyblue")
         self.btnFrame.grid(
             row=len(self.car.displayNames()) + 2,
@@ -73,8 +82,8 @@ class CarGUI:
             self.btnFrame,
             text="Buy Car",
             font=("Arial", 16),
-            bg="black",
-            fg="white",
+            bg="lime",
+            fg="black",
             command=self.buy_car,
         )
         self.buyBtn.grid(row=0, column=0, padx=10, pady=10, sticky="ew")
@@ -84,7 +93,7 @@ class CarGUI:
             text="Rent Car",
             font=("Arial", 16),
             fg="black",
-            bg="white",
+            bg="cyan",
             command=self.rent_car,
         )
         self.rentBtn.grid(row=0, column=1, padx=10, pady=10, sticky="ew")
@@ -99,12 +108,6 @@ class CarGUI:
             command=self.main_close,
         )
         self.exitBtn.grid(row=0, column=2, padx=10, pady=10, sticky="ew")
-
-        self.root.mainloop()
-
-    def main_close(self):
-        """Close the main window."""
-        self.root.destroy()
 
     def display_table(self, window):
         """Create and display the car data table in the given window."""
@@ -159,7 +162,7 @@ class CarGUI:
     def buy_car(self):
         self.root.withdraw()
         self.newWindow = tk.Toplevel(self.root)
-        self.newWindow.geometry("650x500")
+        self.newWindow.geometry("670x500")
         self.newWindow.title("Buy Car Page")
         self.newWindow.config(bg="lightblue")
 
@@ -176,60 +179,16 @@ class CarGUI:
         # Display the table
         self.display_table(self.newWindow)
 
-        # Input Label
-        self.input = tk.Label(
-            self.newWindow,
-            text="Enter Car name",
-            font=("Arial", 12),
-            bg="black",
-            fg="white",
-        )
-        self.input.grid(row=8, column=0, padx=10, pady=5, sticky="w")
-
-        # Text Box
-        self.textBox = tk.Text(
-            self.newWindow,
-            height=1,
-            font=("Arial", 18),
-            bg="white",
-            width=20,
-        )
-        self.textBox.grid(
-            row=8,
-            column=1,
-            columnspan=4,
-            padx=10,
-            pady=10,
-            sticky="ew",
-        )
+        self.rent_buy_input()
 
         # Buttons
-        self.Btn1 = tk.Button(
-            self.newWindow,
-            text="Buy",
-            font=("Arial", 16),
-            bg="black",
-            fg="white",
-            command=self.buy_car_confirm,
-        )
-        self.Btn1.grid(row=9, column=0, padx=10, pady=10, sticky="ew")
-
-        self.Btn2 = tk.Button(
-            self.newWindow,
-            text="Back",
-            font=("Arial", 16),
-            fg="black",
-            bg="red",
-            command=self.mainWindow,
-        )
-        self.Btn2.grid(row=9, column=1, padx=10, pady=10, sticky="ew")
-
+        self.rent_buy_page_btn("Buy", self.buy_car_confirm)
         self.newWindow.protocol("WM_DELETE_WINDOW", self.onclosing)
 
     def rent_car(self):
         self.root.withdraw()
         self.newWindow = tk.Toplevel(self.root)
-        self.newWindow.geometry("650x500")
+        self.newWindow.geometry("670x500")
         self.newWindow.title("Rent Car Page")
         self.newWindow.config(bg="orange")
 
@@ -246,32 +205,8 @@ class CarGUI:
         # Display the table
         self.display_table(self.newWindow)
 
-        # Input Label
-        self.input = tk.Label(
-            self.newWindow,
-            text="Enter Car name",
-            font=("Arial", 12),
-            bg="black",
-            fg="white",
-        )
-        self.input.grid(row=8, column=0, padx=10, pady=5, sticky="w")
+        self.rent_buy_input()
 
-        # Text Box
-        self.textBox = tk.Text(
-            self.newWindow,
-            height=1,
-            font=("Arial", 18),
-            bg="white",
-            width=20,
-        )
-        self.textBox.grid(
-            row=8,
-            column=1,
-            columnspan=4,
-            padx=10,
-            pady=10,
-            sticky="ew",
-        )
         # Input Label
         self.input = tk.Label(
             self.newWindow,
@@ -300,16 +235,45 @@ class CarGUI:
         )
 
         # Buttons
+        self.rent_buy_page_btn("Rent", self.rent_car_confirm)
+        self.newWindow.protocol("WM_DELETE_WINDOW", self.onclosing)
+
+    def rent_buy_input(self):
+        self.input = tk.Label(
+            self.newWindow,
+            text="Enter Car name",
+            font=("Arial", 12),
+            bg="black",
+            fg="white",
+        )
+        self.input.grid(row=8, column=0, padx=10, pady=5, sticky="w")
+
+        self.textBox = tk.Text(
+            self.newWindow,
+            height=1,
+            font=("Arial", 18),
+            bg="white",
+            width=20,
+        )
+        self.textBox.grid(
+            row=8,
+            column=1,
+            columnspan=4,
+            padx=10,
+            pady=10,
+            sticky="ew",
+        )
+
+    def rent_buy_page_btn(self, btn_name, function_name):
         self.Btn1 = tk.Button(
             self.newWindow,
-            text="Rent",
+            text=btn_name,
             font=("Arial", 16),
-            bg="Black",
-            fg="white",
-            command=self.rent_car_confirm,
+            bg="cyan",
+            fg="black",
+            command=function_name,
         )
         self.Btn1.grid(row=10, column=0, padx=10, pady=10, sticky="ew")
-
         self.Btn2 = tk.Button(
             self.newWindow,
             text="Back",
@@ -320,8 +284,6 @@ class CarGUI:
         )
         self.Btn2.grid(row=10, column=1, padx=10, pady=10, sticky="ew")
 
-        self.newWindow.protocol("WM_DELETE_WINDOW", self.onclosing)
-
     def onclosing(self):
         self.root.destroy()
         self.newWindow.destroy()
@@ -329,7 +291,6 @@ class CarGUI:
     def mainWindow(self):
         self.newWindow.destroy()
         self.root.deiconify()
-        self.update_main_window()
 
     def buy_car_confirm(self):
         car_names = self.car.displayNames()
@@ -378,13 +339,16 @@ class CarGUI:
         car_names = self.car.displayNames()
         car_name = self.textBox.get("1.0", tk.END).strip()
         rent_hours = self.hourBox.get("1.0", tk.END).strip()
+        rent_hours = float(rent_hours)
         if not car_name or not rent_hours:
             messagebox.showwarning("Warning", "Please enter a car name and hours.")
             self.textBox.delete("1.0", tk.END)
             self.hourBox.delete("1.0", tk.END)
             return
-        rent_hours = int(rent_hours)
-
+        if rent_hours <= 0:
+            messagebox.showwarning("Warning", "Please enter a valid number.")
+            self.hourBox.delete("1.0", tk.END)
+            return
         try:
             index = car_names.index(car_name)
             rent_cost = rent_hours * int(self.rent_prices[index])
@@ -434,46 +398,7 @@ class CarGUI:
         """Update the main window with the latest car data."""
         self.car = Car(read_car_data_from_file(self.filename))
         self.display_table(self.root)
-        self.btnFrame = tk.Frame(self.root, bg="skyblue")
-        self.btnFrame.grid(
-            row=len(self.car.displayNames()) + 2,
-            column=0,
-            columnspan=4,
-            pady=10,
-            padx=140,
-            sticky="ew",
-        )
-
-        self.buyBtn = tk.Button(
-            self.btnFrame,
-            text="Buy Car",
-            font=("Arial", 16),
-            bg="black",
-            fg="white",
-            command=self.buy_car,
-        )
-        self.buyBtn.grid(row=0, column=0, padx=10, pady=10, sticky="ew")
-
-        self.rentBtn = tk.Button(
-            self.btnFrame,
-            text="Rent Car",
-            font=("Arial", 16),
-            fg="black",
-            bg="white",
-            command=self.rent_car,
-        )
-        self.rentBtn.grid(row=0, column=1, padx=10, pady=10, sticky="ew")
-
-        self.exitBtn = tk.Button(
-            self.btnFrame,
-            text="Exit",
-            font=("Arial", 16),
-            fg="black",
-            bg="red",
-            width=10,
-            command=self.main_close,
-        )
-        self.exitBtn.grid(row=0, column=2, padx=10, pady=10, sticky="ew")
+        self.display_btn(self.root)
 
 
 def write_car_data_to_file(filename, car_data):
